@@ -63,3 +63,21 @@
 	..()
 	pixel_x += rand(-10, 10)
 	pixel_y += rand(-10, 10)
+
+/obj/effect/overlay/crossV
+	name = "cross for vampire"
+	icon = 'icons/effects/chaplain.dmi'
+	icon_state = "vampire"
+	pixel_y = 26
+
+/obj/effect/overlay/crossClock
+	name = "cross for clocker"
+	icon = 'icons/effects/chaplain.dmi'
+	icon_state = "ratvar"
+	pixel_y = 26
+
+/obj/effect/overlay/crossCult
+	name = "cross for cultist"
+	icon = 'icons/effects/chaplain.dmi'
+	icon_state = "narsi"
+	pixel_y = 26

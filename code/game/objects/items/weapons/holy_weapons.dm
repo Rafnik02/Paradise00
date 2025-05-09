@@ -521,11 +521,20 @@
 /obj/item/nullrod/rosary
 	name = "prayer beads"
 	icon_state = "rosary"
-	item_state = null
-	desc = "A set of prayer beads used by many of the more traditional religions in space.<br>Vampires and other unholy abominations have learned to fear these."
+	item_state = "rosary"
+	desc = "Набор молитвенных чёток, используемых многими традиционными религиями.<br>Вампиры и прочая нечисть боятся эту вещь"
+	ru_names = list(
+		NOMINATIVE = "молитвенные чётки",
+		GENITIVE = "молитвенных чёток",
+		DATIVE = "молитвенным чёткам",
+		ACCUSATIVE = "молитвенные чётки",
+		INSTRUMENTAL = "молитвенными чётками",
+		PREPOSITIONAL = "молитвенных чётках"
+	)
 	force = 0
 	throwforce = 0
 	var/praying = FALSE
+	var/isused = FALSE
 
 /obj/item/nullrod/rosary/New()
 	..()
@@ -534,6 +543,29 @@
 /obj/item/nullrod/rosary/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	return ..()
+
+/obj/item/nullrod/rosary/attack_self(mob/user)
+	if(isused)
+		return
+
+	if(!user.mind || !user.mind.isholy)
+		to_chat(user, span_notice("Вы не знаете как пользоваться [capitalize(declent_ru(INSTRUMENTAL))]"))
+		return
+
+	if(tgui_alert(user, "Вы уверены в своём решение? Способность можно активировать только один раз!", "Взор бога", list("Да", "Нет")) == "Нет") // Для избежания случайных использований.
+		return
+
+	isused = TRUE
+
+	user.add_overlay(/obj/effect/overlay/crossCult)
+
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/item/nullrod/rosary, detecting)), 2 SECONDS)
+
+	sleep(4 SECONDS)
+	user.cut_overlay(/obj/effect/overlay/crossCult)
+
+
+
 
 
 /obj/item/nullrod/rosary/attack(mob/living/carbon/human/target, mob/living/user, params, def_zone, skip_attack_anim = FALSE)
